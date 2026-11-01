@@ -1,0 +1,6 @@
+@Dukkan.API_HostAddress = http://localhost:5244
+
+GET {{Dukkan.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
