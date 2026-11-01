@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Dukkan.API/Dukkan.API.csproj" />
+    <Project Path="src/Dukkan.Application/Dukkan.Application.csproj" />
+    <Project Path="src/Dukkan.Domain/Dukkan.Domain.csproj" />
+    <Project Path="src/Dukkan.Infrastructure/Dukkan.Infrastructure.csproj" />
+  </Folder>
+</Solution>
