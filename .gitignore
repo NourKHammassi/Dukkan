@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+src/Dukkan.API/appsettings.json
+src/Dukkan.Infrastructure/Persistence/DesignTimeDbContextFactory.cs
