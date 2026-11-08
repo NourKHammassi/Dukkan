@@ -17,15 +17,22 @@ export interface Store {
 export interface Product {
   id: string
   name: string
+  slug: string
+  description?: string
   price: number
-  originalPrice?: number
+  compareAtPrice?: number | null
   imageUrl?: string
+  images?: string[]
   categoryId: string
   categoryName?: string
   storeId: string
   storeName?: string
   stock?: number
-  isNew?: boolean
+  sku?: string | null
+  avgRating?: number | null
+  reviewCount?: number
+  isActive?: boolean
+  createdAt?: string
 }
 
 export interface PagedResult<T> {
@@ -33,4 +40,5 @@ export interface PagedResult<T> {
   totalCount: number
   page: number
   pageSize: number
+  totalPages: number
 }
