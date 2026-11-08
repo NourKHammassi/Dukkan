@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getCategories, getFeaturedProducts, getStores } from '../api'
 import type { Category, Product, Store } from '../types'
 
 const categoryGradient: Record<string, string> = {
   default: 'linear-gradient(155deg, #F7F5F1 0%, #EDEBE6 100%)',
   tech: [
+    'radial-gradient(circle 110px at 50% 46%, rgba(100,120,200,.12) 0%, transparent 100%)',
+    'linear-gradient(155deg, #EDF0FA 0%, #DDE2F0 100%)',
+  ].join(', '),
+  electronics: [
     'radial-gradient(circle 110px at 50% 46%, rgba(100,120,200,.12) 0%, transparent 100%)',
     'linear-gradient(155deg, #EDF0FA 0%, #DDE2F0 100%)',
   ].join(', '),
@@ -39,6 +44,7 @@ function Skeleton({ w = '100%', h = 20, style = {} }: { w?: string | number; h?:
 }
 
 export default function HomePage() {
+  const navigate = useNavigate()
   const [categories, setCategories] = useState<Category[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [stores, setStores] = useState<Store[]>([])
@@ -155,17 +161,26 @@ export default function HomePage() {
                 </div>
               )
             : products.map(product => (
-                <div key={product.id} className="product-card" style={{ background: 'var(--bg)', cursor: 'pointer', position: 'relative' }}>
-                  {product.isNew && (
-                    <div style={{ position: 'absolute', top: 12, left: 12, fontFamily: 'Space Grotesk', fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', background: 'var(--text)', color: 'white', padding: '3px 7px', zIndex: 1 }}>New</div>
+                <div
+                  key={product.id}
+                  className="product-card"
+                  onClick={() => navigate(`/products/${product.id}`)}
+                  style={{ background: 'var(--bg)', cursor: 'pointer', position: 'relative' }}
+                >
+                  {product.compareAtPrice && (
+                    <div style={{ position: 'absolute', top: 12, left: 12, fontFamily: 'Space Grotesk', fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', background: 'var(--text)', color: 'white', padding: '3px 7px', zIndex: 1 }}>Sale</div>
                   )}
-                  <div style={{ height: 240, background: product.imageUrl ? `url(${product.imageUrl}) center/cover` : getGradient(product.categoryName), position: 'relative', overflow: 'hidden' }}>
-                    {!product.imageUrl && (
+                  <div style={{ height: 240, background: product.images?.[0] ? `url(${product.images[0]}) center/cover` : getGradient(product.categoryName), position: 'relative', overflow: 'hidden' }}>
+                    {!product.images?.[0] && (
                       <div style={{ position: 'absolute', bottom: 16, left: 0, right: 0, textAlign: 'center', fontFamily: 'Space Grotesk', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-3)' }}>
                         {product.categoryName ?? 'Product'}
                       </div>
                     )}
-                    <button className="add-btn" style={{ position: 'absolute', bottom: 12, left: '50%', transform: 'translateX(-50%) translateY(8px)', fontFamily: 'Space Grotesk', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', background: 'var(--text)', color: 'white', border: 'none', padding: '8px 16px', cursor: 'pointer', opacity: 0, transition: 'opacity 0.2s, transform 0.2s', whiteSpace: 'nowrap' }}>
+                    <button
+                      className="add-btn"
+                      onClick={e => e.stopPropagation()}
+                      style={{ position: 'absolute', bottom: 12, left: '50%', transform: 'translateX(-50%) translateY(8px)', fontFamily: 'Space Grotesk', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', background: 'var(--text)', color: 'white', border: 'none', padding: '8px 16px', cursor: 'pointer', opacity: 0, transition: 'opacity 0.2s, transform 0.2s', whiteSpace: 'nowrap' }}
+                    >
                       + Add to Bag
                     </button>
                   </div>
@@ -176,8 +191,8 @@ export default function HomePage() {
                     <div style={{ fontFamily: 'Inter', fontSize: 13, color: 'var(--text)', marginBottom: 8, lineHeight: 1.3 }}>{product.name}</div>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                       <span style={{ fontFamily: 'Space Grotesk', fontSize: 14, fontWeight: 600, color: 'var(--text)' }}>${product.price.toFixed(2)}</span>
-                      {product.originalPrice && (
-                        <span style={{ fontFamily: 'Inter', fontSize: 12, color: 'var(--text-3)', textDecoration: 'line-through' }}>${product.originalPrice.toFixed(2)}</span>
+                      {product.compareAtPrice && (
+                        <span style={{ fontFamily: 'Inter', fontSize: 12, color: 'var(--text-3)', textDecoration: 'line-through' }}>${product.compareAtPrice.toFixed(2)}</span>
                       )}
                     </div>
                   </div>
