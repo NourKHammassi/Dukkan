@@ -1,5 +1,5 @@
 import api from './client'
-import type { Product, PagedResult, AuthResponse } from '../types'
+import type { Product, PagedResult, AuthResponse, Order } from '../types'
 
 export const getCategories = () =>
   api.get('/api/categories').then(r => Array.isArray(r.data) ? r.data : r.data.items ?? [])
@@ -29,3 +29,6 @@ export const clearBackendCart = () =>
 
 export const createOrder = (shippingAddress: string) =>
   api.post('/api/orders', { shippingAddress }).then(r => r.data)
+
+export const getOrders = () =>
+  api.get<Order[]>('/api/orders').then(r => r.data)
