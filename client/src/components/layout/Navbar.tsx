@@ -1,11 +1,11 @@
+import { Link, useNavigate } from 'react-router-dom'
 import { useCartStore } from '../../store/cartStore'
 import { useAuthStore } from '../../store/authStore'
-import { useNavigate } from 'react-router-dom'
 
 export default function Navbar() {
-  const count = useCartStore(state => state.count())
-  const { user, logout, isAuthenticated } = useAuthStore()
   const navigate = useNavigate()
+  const itemCount = useCartStore(state => state.items.reduce((s, i) => s + i.quantity, 0))
+  const { user, logout, isAuthenticated } = useAuthStore()
 
   function handleLogout() {
     logout()
@@ -13,39 +13,63 @@ export default function Navbar() {
   }
 
   return (
-    <nav style={{ height: 62, background: 'var(--bg)', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', padding: '0 40px', position: 'sticky', top: 0, zIndex: 100, gap: 48 }}>
-      <a href="/" style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 18, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text)', textDecoration: 'none' }}>Dukkan</a>
+    <nav style={{
+      position: 'sticky',
+      top: 0,
+      zIndex: 100,
+      background: 'var(--bg)',
+      borderBottom: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 40px',
+      height: 62,
+    }}>
 
-      <div style={{ display: 'flex', gap: 28, flex: 1 }}>
-        {['Shop', 'Stores', 'Orders', 'About'].map(link => (
-          <a key={link} href="#" style={{ fontFamily: 'Space Grotesk', fontSize: 12, fontWeight: 500, letterSpacing: '0.05em', color: 'var(--text-2)', textDecoration: 'none' }}>{link}</a>
-        ))}
-      </div>
+      {/* LOGO */}
+      <Link to="/" style={{ textDecoration: 'none' }}>
+        <span className="font-display" style={{ fontSize: 22, fontWeight: 400, letterSpacing: '0.04em', color: 'var(--text)' }}>
+          Dukkan
+        </span>
+      </Link>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      {/* RIGHT */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+
         {isAuthenticated() ? (
           <>
-            <span style={{ fontFamily: 'Space Grotesk', fontSize: 12, color: 'var(--text-2)' }}>
+            <span style={{ fontFamily: 'Inter', fontSize: 13, color: 'var(--text-2)' }}>
               {user?.firstName}
             </span>
+            {user?.role === 'Admin' && (
+              <Link
+                to="/orders"
+                style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-2)', textDecoration: 'none' }}
+              >
+                Orders
+              </Link>
+            )}
             <button
               onClick={handleLogout}
-              style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', background: 'none', color: 'var(--text-3)', border: '1px solid var(--border)', padding: '7px 14px', cursor: 'pointer' }}
+              style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-2)', background: 'none', border: 'none', cursor: 'pointer' }}
             >
               Sign Out
             </button>
           </>
         ) : (
-          <a href="/login" style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-2)', textDecoration: 'none' }}>
+          <Link
+            to="/login"
+            style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-2)', textDecoration: 'none' }}
+          >
             Sign In
-          </a>
+          </Link>
         )}
 
-        <a href="/cart" style={{ textDecoration: 'none' }}>
-          <button style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', background: 'var(--text)', color: 'white', border: 'none', padding: '9px 18px', cursor: 'pointer' }}>
-            Bag ({count})
-          </button>
-        </a>
+        <Link to="/cart" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text)' }}>
+            Bag{itemCount > 0 ? `(${itemCount})` : ''}
+          </span>
+        </Link>
       </div>
     </nav>
   )

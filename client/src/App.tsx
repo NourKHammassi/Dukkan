@@ -7,8 +7,9 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrderConfirmedPage from './pages/OrderConfirmedPage'
+import OrdersPage from './pages/OrdersPage'
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <Navbar />
@@ -20,8 +21,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/order-confirmed" element={<OrderConfirmedPage />} />
+        <Route path="/orders" element={<OrdersPage />} />
       </Routes>
     </BrowserRouter>
   )
 }
-export default App
