@@ -20,3 +20,12 @@ export const login = (email: string, password: string) =>
 
 export const register = (firstName: string, lastName: string, email: string, password: string) =>
   api.post<AuthResponse>('/api/auth/register', { firstName, lastName, email, password }).then(r => r.data)
+
+export const addToBackendCart = (productId: string, quantity: number) =>
+  api.post('/api/cart', { productId, quantity })
+
+export const clearBackendCart = () =>
+  api.delete('/api/cart')
+
+export const createOrder = (shippingAddress: string) =>
+  api.post('/api/orders', { shippingAddress }).then(r => r.data)
