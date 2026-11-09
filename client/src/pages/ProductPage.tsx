@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getProduct } from '../api'
 import type { Product } from '../types'
+import { useCartStore } from '../store/cartStore'
 
 const categoryGradient: Record<string, string> = {
   default: 'linear-gradient(155deg, #F7F5F1 0%, #EDEBE6 100%)',
@@ -28,10 +29,12 @@ function Skeleton({ w = '100%', h = 20, style = {} }: { w?: string | number; h?:
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const addItem = useCartStore(state => state.addItem)
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [qty, setQty] = useState(1)
+  const [added, setAdded] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -44,6 +47,13 @@ export default function ProductPage() {
   const imageBg = product?.images?.[0]
     ? `url(${product.images[0]}) center/cover`
     : getGradient(product?.categoryName)
+
+  function handleAddToBag() {
+    if (!product) return
+    addItem(product, qty)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 1800)
+  }
 
   return (
     <main style={{ background: 'var(--bg)', minHeight: '100vh' }}>
@@ -184,11 +194,22 @@ export default function ProductPage() {
                       >+</button>
                     </div>
                     <button
-                      style={{ flex: 1, height: 52, background: 'var(--text)', color: 'white', border: 'none', fontFamily: 'Space Grotesk', fontSize: 12, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer' }}
+                      onClick={handleAddToBag}
+                      style={{ flex: 1, height: 52, background: added ? '#2d6a4f' : 'var(--text)', color: 'white', border: 'none', fontFamily: 'Space Grotesk', fontSize: 12, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', cursor: 'pointer', transition: 'background 0.2s' }}
                     >
-                      Add to Bag — ${(product.price * qty).toFixed(2)}
+                      {added ? '✓ Added to Bag' : `Add to Bag — $${(product.price * qty).toFixed(2)}`}
                     </button>
                   </div>
+                )}
+
+                {/* view bag link — appears after adding */}
+                {added && (
+                  <button
+                    onClick={() => navigate('/cart')}
+                    style={{ width: '100%', height: 44, background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', cursor: 'pointer', marginBottom: 16 }}
+                  >
+                    View Bag
+                  </button>
                 )}
 
                 <div style={{ height: 1, background: 'var(--border)', margin: '32px 0' }} />
