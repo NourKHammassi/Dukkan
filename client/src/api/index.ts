@@ -1,5 +1,5 @@
 import api from './client'
-import type { Product, PagedResult, AuthResponse, Order } from '../types'
+import type { Product, PagedResult, AuthResponse, Order, Review } from '../types'
 
 export const getCategories = () =>
   api.get('/api/categories').then(r => Array.isArray(r.data) ? r.data : r.data.items ?? [])
@@ -41,3 +41,12 @@ export const createOrder = (shippingAddress: string) =>
 
 export const getOrders = () =>
   api.get<Order[]>('/api/orders').then(r => r.data)
+
+export const getReviews = (productId: string) =>
+  api.get<Review[]>(`/api/reviews/product/${productId}`).then(r => r.data)
+
+export const createReview = (productId: string, orderId: string | null, rating: number, comment: string) =>
+  api.post<Review>('/api/reviews', { productId, orderId, rating, comment }).then(r => r.data)
+
+export const deleteReview = (reviewId: string) =>
+  api.delete(`/api/reviews/${reviewId}`)
