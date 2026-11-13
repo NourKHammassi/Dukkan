@@ -168,8 +168,8 @@ export default function ProductsPage() {
                   <div key={product.id} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     <Link to={`/products/${product.id}`} style={{ textDecoration: 'none', display: 'block' }}>
                       <div style={{ aspectRatio: '4/3', background: 'var(--bg-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                        {product.imageUrl
-                          ? <img src={product.imageUrl} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        {product.images?.[0] ?? product.imageUrl
+  ? <img src={product.images?.[0] ?? product.imageUrl!} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <span style={{ fontFamily: 'Space Grotesk', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{product.categoryName}</span>
                         }
                       </div>

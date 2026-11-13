@@ -15,11 +15,16 @@ export interface Product {
   name: string
   description: string
   price: number
+  compareAtPrice?: number
+  images?: string[]
   imageUrl?: string
   categoryName: string
   storeName: string
   storeId: string
   stock: number
+  sku?: string
+  reviewCount?: number
+  avgRating?: number
 }
 
 export interface PagedResult<T> {
