@@ -66,3 +66,12 @@ export interface Order {
   totalAmount: number
   items: OrderItem[]
 }
+
+export interface Review {
+  id: string
+  rating: number
+  comment: string
+  authorName: string
+  authorId?: string
+  createdAt: string
+}
