@@ -40,7 +40,7 @@ export const createOrder = (shippingAddress: string) =>
   api.post('/api/orders', { shippingAddress }).then(r => r.data)
 
 export const getOrders = () =>
-  api.get<Order[]>('/api/orders').then(r => r.data)
+  api.get<Order[]>('/api/orders/my').then(r => r.data)
 
 export const getReviews = (productId: string) =>
   api.get<Review[]>(`/api/reviews/product/${productId}`).then(r => r.data)
