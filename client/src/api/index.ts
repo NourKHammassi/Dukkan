@@ -4,6 +4,15 @@ import type { Product, PagedResult, AuthResponse, Order } from '../types'
 export const getCategories = () =>
   api.get('/api/categories').then(r => Array.isArray(r.data) ? r.data : r.data.items ?? [])
 
+export const getProducts = (params?: {
+  page?: number
+  pageSize?: number
+  categoryId?: string
+  search?: string
+}) =>
+  api.get<PagedResult<Product>>('/api/products', { params })
+    .then(r => Array.isArray(r.data) ? { items: r.data, totalCount: r.data.length } : r.data)
+
 export const getFeaturedProducts = (pageSize = 8) =>
   api.get<PagedResult<Product>>('/api/products', { params: { page: 1, pageSize } })
     .then(r => Array.isArray(r.data) ? r.data : r.data.items ?? [])

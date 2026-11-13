@@ -33,9 +33,18 @@ export default function Navbar() {
         </span>
       </Link>
 
+      {/* CENTER */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+        <Link
+          to="/products"
+          style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-2)', textDecoration: 'none' }}
+        >
+          Shop
+        </Link>
+      </div>
+
       {/* RIGHT */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-
         {isAuthenticated() ? (
           <>
             <span style={{ fontFamily: 'Inter', fontSize: 13, color: 'var(--text-2)' }}>
@@ -65,7 +74,7 @@ export default function Navbar() {
           </Link>
         )}
 
-        <Link to="/cart" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <Link to="/cart" style={{ textDecoration: 'none' }}>
           <span style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text)' }}>
             Bag{itemCount > 0 ? `(${itemCount})` : ''}
           </span>
