@@ -52,6 +52,14 @@ export default function Navbar() {
             </span>
             {(user?.role === 'Admin' || user?.role === 'Seller') && (
               <Link
+                to="/seller/dashboard"
+                style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-2)', textDecoration: 'none' }}
+              >
+                Dashboard
+              </Link>
+            )}
+            {(user?.role === 'Admin' || user?.role === 'Seller') && (
+              <Link
                 to="/seller/products/new"
                 style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-2)', textDecoration: 'none' }}
               >
