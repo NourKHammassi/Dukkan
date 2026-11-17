@@ -44,6 +44,7 @@ public class AuthService : IAuthService
         return new AuthResponseDto
         {
             Token = GenerateToken(user),
+            Id = user.Id.ToString(),
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
@@ -62,6 +63,7 @@ public class AuthService : IAuthService
         return new AuthResponseDto
         {
             Token = GenerateToken(user),
+            Id = user.Id.ToString(),
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,

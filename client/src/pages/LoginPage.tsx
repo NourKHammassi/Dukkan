@@ -17,7 +17,13 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const data = await login(email, password)
-      setAuth(data.token, data.user)
+      setAuth(data.token, {
+        id: data.id,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        role: data.role
+      })
       navigate('/')
     } catch {
       setError('Invalid email or password.')
