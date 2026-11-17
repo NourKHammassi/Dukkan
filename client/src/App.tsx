@@ -10,6 +10,7 @@ import RegisterPage from './pages/RegisterPage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrderConfirmedPage from './pages/OrderConfirmedPage'
 import OrdersPage from './pages/OrdersPage'
+import CreateProductPage from './pages/CreateProductPage'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
         <Route path="/order-confirmed" element={<ProtectedRoute><OrderConfirmedPage /></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
+        <Route path="/seller/products/new" element={<ProtectedRoute><CreateProductPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )
