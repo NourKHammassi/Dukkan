@@ -2,9 +2,10 @@
 
 public class AuthResponseDto
 {
-    public string Token { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Role { get; set; } = string.Empty;
+    public string Token { get; set; } = default!;
+    public string Id { get; set; } = default!;
+    public string Email { get; set; } = default!;
+    public string FirstName { get; set; } = default!;
+    public string LastName { get; set; } = default!;
+    public string Role { get; set; } = default!;
 }

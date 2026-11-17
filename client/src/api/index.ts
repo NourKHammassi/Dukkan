@@ -50,3 +50,12 @@ export const createReview = (productId: string, orderId: string | null, rating: 
 
 export const deleteReview = (reviewId: string) =>
   api.delete(`/api/reviews/${reviewId}`)
+
+export const uploadImage = async (file: File): Promise<string> => {
+  const formData = new FormData()
+  formData.append('file', file)
+  const res = await api.post<{ url: string }>('/api/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+  return res.data.url
+}
