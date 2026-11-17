@@ -44,7 +44,11 @@ export interface AuthUser {
 
 export interface AuthResponse {
   token: string
-  user: AuthUser
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+  role: string
 }
 
 export interface OrderItem {
