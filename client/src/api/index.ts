@@ -8,6 +8,7 @@ export const getProducts = (params?: {
   page?: number
   pageSize?: number
   categoryId?: string
+  storeId?: string
   search?: string
 }) =>
   api.get<PagedResult<Product>>('/api/products', { params })
@@ -20,6 +21,12 @@ export const getFeaturedProducts = (pageSize = 8) =>
 export const getStores = (pageSize = 3) =>
   api.get('/api/stores', { params: { page: 1, pageSize } })
     .then(r => Array.isArray(r.data) ? r.data : r.data.items ?? [])
+
+export const getMyStore = () =>
+  api.get('/api/stores/me').then(r => r.data)
+
+export const createStore = (data: { name: string; description?: string; logo?: string }) =>
+  api.post('/api/stores', data).then(r => r.data)
 
 export const getProduct = (id: string) =>
   api.get<Product>(`/api/products/${id}`).then(r => r.data)
