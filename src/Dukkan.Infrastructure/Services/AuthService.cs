@@ -26,7 +26,7 @@ public class AuthService : IAuthService
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
     {
         if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
-            throw new Exception("Email already in use");
+            throw new InvalidOperationException("Email already in use");
 
         var user = new User
         {
@@ -55,10 +55,13 @@ public class AuthService : IAuthService
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email)
-            ?? throw new Exception("Invalid credentials");
+            ?? throw new InvalidOperationException("Invalid credentials");
 
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-            throw new Exception("Invalid credentials");
+            throw new InvalidOperationException("Invalid credentials");
+
+        if (!user.IsActive)
+            throw new InvalidOperationException("Your account has been suspended");
 
         return new AuthResponseDto
         {
@@ -84,6 +87,8 @@ public class AuthService : IAuthService
         };
 
         var token = new JwtSecurityToken(
+            issuer: _config["Jwt:Issuer"],
+            audience: _config["Jwt:Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddDays(7),
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
