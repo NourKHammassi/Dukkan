@@ -29,7 +29,7 @@ interface AdminUser {
   lastName: string
   email: string
   role: string
-  isBanned: boolean
+  isActive: boolean   // ← was isBanned
   createdAt: string
 }
 
@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
     setActionId(id + '-ban')
     try {
       await banUser(id)
-      setUsers(p => p.map(u => u.id === id ? { ...u, isBanned: true } : u))
+      setUsers(p => p.map(u => u.id === id ? { ...u, isActive: false } : u))  // ← was isBanned: true
     } catch {}
     setActionId(null)
   }
@@ -107,12 +107,12 @@ export default function AdminDashboardPage() {
     setActionId(id + '-unban')
     try {
       await unbanUser(id)
-      setUsers(p => p.map(u => u.id === id ? { ...u, isBanned: false } : u))
+      setUsers(p => p.map(u => u.id === id ? { ...u, isActive: true } : u))  // ← was isBanned: false
     } catch {}
     setActionId(null)
   }
 
-  const tabBtn = (t: Tab, label: string): React.CSSProperties => ({
+  const tabBtn = (t: Tab): React.CSSProperties => ({
     fontFamily: 'Space Grotesk',
     fontSize: 11,
     fontWeight: 600,
@@ -143,16 +143,16 @@ export default function AdminDashboardPage() {
 
       {/* Tabs */}
       <div style={{ padding: '0 40px', borderBottom: '1px solid var(--border)', display: 'flex' }}>
-        <button style={tabBtn('overview', 'Overview')} onClick={() => setTab('overview')}>Overview</button>
-        <button style={tabBtn('stores', 'Stores')} onClick={() => setTab('stores')}>
+        <button style={tabBtn('overview')} onClick={() => setTab('overview')}>Overview</button>
+        <button style={tabBtn('stores')} onClick={() => setTab('stores')}>
           Pending Stores{(stats?.pendingStores ?? 0) > 0 ? ` (${stats!.pendingStores})` : ''}
         </button>
-        <button style={tabBtn('users', 'Users')} onClick={() => setTab('users')}>Users</button>
+        <button style={tabBtn('users')} onClick={() => setTab('users')}>Users</button>
       </div>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 40px' }}>
 
-        {/* ── OVERVIEW ── */}
+        {/* OVERVIEW */}
         {tab === 'overview' && (
           statsLoading ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 1 }}>
@@ -180,7 +180,7 @@ export default function AdminDashboardPage() {
           )
         )}
 
-        {/* ── PENDING STORES ── */}
+        {/* PENDING STORES */}
         {tab === 'stores' && (
           storesLoading ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -222,7 +222,7 @@ export default function AdminDashboardPage() {
           )
         )}
 
-        {/* ── USERS ── */}
+        {/* USERS */}
         {tab === 'users' && (
           usersLoading ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -235,7 +235,7 @@ export default function AdminDashboardPage() {
           ) : (
             <div style={{ border: '1px solid var(--border)' }}>
               {users.map((u, i) => (
-                <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '20px 28px', borderBottom: i < users.length - 1 ? '1px solid var(--border)' : 'none', opacity: u.isBanned ? 0.5 : 1 }}>
+                <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '20px 28px', borderBottom: i < users.length - 1 ? '1px solid var(--border)' : 'none', opacity: !u.isActive ? 0.5 : 1 }}>  {/* ← was u.isBanned */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: 'Inter', fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>
                       {u.firstName} {u.lastName}
@@ -245,21 +245,18 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  {/* role badge */}
                   <span style={{ fontFamily: 'Space Grotesk', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: u.role === 'Admin' ? 'var(--text)' : u.role === 'Seller' ? '#2b6cb0' : 'var(--text-3)', flexShrink: 0 }}>
                     {u.role}
                   </span>
 
-                  {/* banned badge */}
-                  {u.isBanned && (
+                  {!u.isActive && (  // ← was u.isBanned
                     <span style={{ fontFamily: 'Space Grotesk', fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#c0392b', background: '#fff5f5', padding: '3px 8px', flexShrink: 0 }}>
                       Banned
                     </span>
                   )}
 
-                  {/* ban / unban — not for Admin */}
                   {u.role !== 'Admin' && (
-                    u.isBanned ? (
+                    !u.isActive ? (  // ← was u.isBanned
                       <button
                         onClick={() => handleUnban(u.id)}
                         disabled={actionId === u.id + '-unban'}

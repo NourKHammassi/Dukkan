@@ -57,10 +57,10 @@ public class AdminService : IAdminService
     public async Task BanUserAsync(Guid userId)
     {
         var user = await _context.Users.FindAsync(userId)
-            ?? throw new Exception("User not found");
+            ?? throw new KeyNotFoundException("User not found");
 
         if (user.Role == UserRole.Admin)
-            throw new Exception("Cannot ban an admin");
+            throw new InvalidOperationException("Cannot ban an admin");
 
         user.IsActive = false;
         await _context.SaveChangesAsync();
@@ -69,7 +69,7 @@ public class AdminService : IAdminService
     public async Task UnbanUserAsync(Guid userId)
     {
         var user = await _context.Users.FindAsync(userId)
-            ?? throw new Exception("User not found");
+            ?? throw new KeyNotFoundException("User not found");
 
         user.IsActive = true;
         await _context.SaveChangesAsync();
