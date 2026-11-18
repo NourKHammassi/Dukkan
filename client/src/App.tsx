@@ -13,6 +13,7 @@ import OrdersPage from './pages/OrdersPage'
 import CreateProductPage from './pages/CreateProductPage'
 import CreateStorePage from './pages/CreateStorePage'
 import SellerDashboardPage from './pages/SellerDashboardPage'
+import AdminDashboardPage from './pages/AdminDashboardPage'
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/seller/products/new" element={<ProtectedRoute><CreateProductPage /></ProtectedRoute>} />
         <Route path="/seller/store/create" element={<ProtectedRoute><CreateStorePage /></ProtectedRoute>} />
         <Route path="/seller/dashboard" element={<ProtectedRoute><SellerDashboardPage /></ProtectedRoute>} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboardPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

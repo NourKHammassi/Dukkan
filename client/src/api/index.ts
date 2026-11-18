@@ -28,6 +28,12 @@ export const getMyStore = () =>
 export const createStore = (data: { name: string; description?: string; logo?: string }) =>
   api.post('/api/stores', data).then(r => r.data)
 
+export const approveStore = (id: string) =>
+  api.patch(`/api/stores/${id}/approve`)
+
+export const rejectStore = (id: string) =>
+  api.patch(`/api/stores/${id}/reject`)
+
 export const getProduct = (id: string) =>
   api.get<Product>(`/api/products/${id}`).then(r => r.data)
 
@@ -66,3 +72,19 @@ export const uploadImage = async (file: File): Promise<string> => {
   })
   return res.data.url
 }
+
+// Admin
+export const getAdminStats = () =>
+  api.get('/api/admin/stats').then(r => r.data)
+
+export const getAdminUsers = () =>
+  api.get('/api/admin/users').then(r => Array.isArray(r.data) ? r.data : r.data.items ?? [])
+
+export const banUser = (id: string) =>
+  api.patch(`/api/admin/users/${id}/ban`)
+
+export const unbanUser = (id: string) =>
+  api.patch(`/api/admin/users/${id}/unban`)
+
+export const getPendingStores = () =>
+  api.get('/api/admin/stores/pending').then(r => Array.isArray(r.data) ? r.data : r.data.items ?? [])
