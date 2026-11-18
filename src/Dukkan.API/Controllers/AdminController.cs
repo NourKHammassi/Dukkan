@@ -33,29 +33,15 @@ public class AdminController : ControllerBase
     [HttpPatch("users/{id}/ban")]
     public async Task<IActionResult> Ban(Guid id)
     {
-        try
-        {
-            await _adminService.BanUserAsync(id);
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        await _adminService.BanUserAsync(id);
+        return NoContent();
     }
 
     [HttpPatch("users/{id}/unban")]
     public async Task<IActionResult> Unban(Guid id)
     {
-        try
-        {
-            await _adminService.UnbanUserAsync(id);
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        await _adminService.UnbanUserAsync(id);
+        return NoContent();
     }
 
     [HttpGet("stores/pending")]
