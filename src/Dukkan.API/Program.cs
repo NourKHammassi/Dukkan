@@ -59,6 +59,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IUploadService, CloudinaryUploadService>();
+builder.Services.AddScoped<IStripeService, StripeService>();
 
 // JWT Authentication
 var jwtSecret = builder.Configuration["Jwt:Secret"]!;

@@ -8,6 +8,8 @@ import CartPage from './pages/CartPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import CheckoutPage from './pages/CheckoutPage'
+import CheckoutSuccessPage from './pages/CheckoutSuccessPage'
+import CheckoutCancelPage from './pages/CheckoutCancelPage'
 import OrderConfirmedPage from './pages/OrderConfirmedPage'
 import OrdersPage from './pages/OrdersPage'
 import CreateProductPage from './pages/CreateProductPage'
@@ -28,6 +30,8 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+        <Route path="/checkout/success" element={<ProtectedRoute><CheckoutSuccessPage /></ProtectedRoute>} />
+        <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
         <Route path="/order-confirmed" element={<ProtectedRoute><OrderConfirmedPage /></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
         <Route path="/seller/products/new" element={<ProtectedRoute><CreateProductPage /></ProtectedRoute>} />
