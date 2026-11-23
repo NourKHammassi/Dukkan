@@ -67,10 +67,35 @@ public class OrderService : IOrderService
 
     public async Task<OrderDto> CreateFromCartAsync(Guid userId, CreateOrderDto dto)
     {
-        var cartItems = await _context.CartItems
-            .Include(ci => ci.Product).ThenInclude(p => p.Store)
-            .Where(ci => ci.UserId == userId)
-            .ToListAsync();
+        List<CartItem> cartItems;
+
+        if (dto.Items != null && dto.Items.Count > 0)
+        {
+            // Frontend-driven cart: fetch products for the provided item list
+            var productIds = dto.Items.Select(i => i.ProductId).ToList();
+            var products = await _context.Products
+                .Include(p => p.Store)
+                .Where(p => productIds.Contains(p.Id))
+                .ToDictionaryAsync(p => p.Id);
+
+            cartItems = dto.Items
+                .Where(i => products.ContainsKey(i.ProductId))
+                .Select(i => new CartItem
+                {
+                    UserId = userId,
+                    ProductId = i.ProductId,
+                    Quantity = i.Quantity,
+                    Product = products[i.ProductId]
+                })
+                .ToList();
+        }
+        else
+        {
+            cartItems = await _context.CartItems
+                .Include(ci => ci.Product).ThenInclude(p => p.Store)
+                .Where(ci => ci.UserId == userId)
+                .ToListAsync();
+        }
 
         if (cartItems.Count == 0)
             throw new Exception("Cart is empty");
@@ -115,8 +140,12 @@ public class OrderService : IOrderService
             createdOrders.Add(order);
         }
 
-        // Clear cart
-        _context.CartItems.RemoveRange(cartItems);
+        // Clear DB cart if it was used
+        if (dto.Items == null || dto.Items.Count == 0)
+        {
+            _context.CartItems.RemoveRange(cartItems);
+        }
+
         await _context.SaveChangesAsync();
 
         // Return first order (multi-store orders return separately)
