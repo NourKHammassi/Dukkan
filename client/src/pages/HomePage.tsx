@@ -43,6 +43,13 @@ function Skeleton({ w = '100%', h = 20, style = {} }: { w?: string | number; h?:
   )
 }
 
+const HERO_TILES = [
+  { label: 'Fashion',     num: '01', gradient: categoryGradient.fashion },
+  { label: 'Beauty',      num: '02', gradient: categoryGradient.beauty },
+  { label: 'Electronics', num: '03', gradient: categoryGradient.electronics },
+  { label: 'Home',        num: '04', gradient: categoryGradient.home },
+]
+
 export default function HomePage() {
   const navigate = useNavigate()
   const [categories, setCategories] = useState<Category[]>([])
@@ -67,10 +74,12 @@ export default function HomePage() {
       <style>{`
         @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
         .product-card:hover .add-btn { opacity: 1 !important; transform: translateX(-50%) translateY(0) !important; }
+        .hero-tile:hover { filter: brightness(0.97); }
       `}</style>
 
       {/* HERO */}
       <section style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: 520, borderBottom: '1px solid var(--border)' }}>
+        {/* Left */}
         <div style={{ padding: '72px 56px', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '1px solid var(--border)' }}>
           <span style={{ fontFamily: 'Space Grotesk', fontSize: 10, fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text-3)', marginBottom: 24 }}>
             Multi-Vendor Marketplace
@@ -82,22 +91,42 @@ export default function HomePage() {
             Browse independent sellers, unique products, and fresh collections — all in one place.
           </p>
           <div style={{ display: 'flex', gap: 12 }}>
-            <button style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', background: 'var(--text)', color: 'white', border: 'none', padding: '13px 28px', cursor: 'pointer' }}>
+            <button
+              onClick={() => navigate('/products')}
+              style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', background: 'var(--text)', color: 'white', border: 'none', padding: '13px 28px', cursor: 'pointer' }}>
               Shop Now
             </button>
-            <button style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', padding: '13px 28px', cursor: 'pointer' }}>
+            <button
+              onClick={() => navigate('/products')}
+              style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', background: 'transparent', color: 'var(--text)', border: '1px solid var(--border)', padding: '13px 28px', cursor: 'pointer' }}>
               Browse Stores
             </button>
           </div>
         </div>
-        <div style={{ background: 'var(--bg-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(180,160,130,.13) 0%, transparent 100%)' }} />
-          <div style={{ textAlign: 'center', position: 'relative' }}>
-            <div className="font-display" style={{ fontSize: 140, lineHeight: 1, color: 'var(--bg-3)', fontWeight: 300 }}>Dukkan</div>
-            <div style={{ fontFamily: 'Space Grotesk', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text-3)', marginTop: 8 }}>
-              دكان — Your marketplace
+
+        {/* Right — category mosaic */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr' }}>
+          {HERO_TILES.map((tile, i) => (
+            <div
+              key={i}
+              className="hero-tile"
+              style={{
+                background: tile.gradient,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                padding: '28px 32px',
+                borderRight: i % 2 === 0 ? '1px solid var(--border)' : 'none',
+                borderBottom: i < 2 ? '1px solid var(--border)' : 'none',
+                cursor: 'pointer',
+                transition: 'filter 0.2s',
+              }}
+              onClick={() => navigate('/products')}
+            >
+              <div style={{ fontFamily: 'Space Grotesk', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.14em', marginBottom: 6 }}>{tile.num}</div>
+              <div style={{ fontFamily: 'Space Grotesk', fontSize: 14, fontWeight: 600, color: 'var(--text)', letterSpacing: '0.02em' }}>{tile.label}</div>
             </div>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -121,7 +150,7 @@ export default function HomePage() {
             : error || categories.length === 0
             ? <div style={{ padding: '32px 40px', fontFamily: 'Space Grotesk', fontSize: 12, color: 'var(--text-3)' }}>{error ? 'Could not load categories.' : 'No categories yet.'}</div>
             : categories.slice(0, 6).map((cat, i) => (
-                <div key={cat.id} style={{ flex: 1, padding: '28px 32px', borderRight: i < categories.length - 1 ? '1px solid var(--border)' : 'none', cursor: 'pointer' }}>
+                <div key={cat.id} onClick={() => navigate('/products')} style={{ flex: 1, padding: '28px 32px', borderRight: i < categories.length - 1 ? '1px solid var(--border)' : 'none', cursor: 'pointer' }}>
                   <div style={{ fontFamily: 'Space Grotesk', fontSize: 10, color: 'var(--text-3)', marginBottom: 8, letterSpacing: '0.08em' }}>
                     {String(i + 1).padStart(2, '0')}
                   </div>
@@ -142,7 +171,7 @@ export default function HomePage() {
             {loading ? '' : `${products.length} products`}
           </span>
           <div style={{ flex: 1 }} />
-          <a href="#" style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text)', textDecoration: 'none' }}>View All →</a>
+          <span onClick={() => navigate('/products')} style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text)', cursor: 'pointer' }}>View All →</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'var(--border)' }}>
           {loading
@@ -211,18 +240,20 @@ export default function HomePage() {
           <p style={{ fontFamily: 'Inter', fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 24 }}>
             Join our marketplace of independent sellers. Set up your store in minutes.
           </p>
-          <button style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', background: 'white', color: '#0C0B09', border: 'none', padding: '13px 28px', cursor: 'pointer' }}>
+          <button
+            onClick={() => navigate('/seller/store/create')}
+            style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', background: 'white', color: '#0C0B09', border: 'none', padding: '13px 28px', cursor: 'pointer' }}>
             Start Selling
           </button>
         </div>
       </section>
 
-      {/* STORES */}
+      {/* FEATURED STORES */}
       <section style={{ padding: '64px 40px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginBottom: 40 }}>
           <h2 className="font-display" style={{ fontSize: 36, fontWeight: 300, color: 'var(--text)' }}>Featured Stores</h2>
           <div style={{ flex: 1 }} />
-          <a href="#" style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text)', textDecoration: 'none' }}>All Stores →</a>
+          <span onClick={() => navigate('/products')} style={{ fontFamily: 'Space Grotesk', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text)', cursor: 'pointer' }}>All Stores →</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, background: 'var(--border)' }}>
           {loading
@@ -261,7 +292,7 @@ export default function HomePage() {
       {/* FOOTER */}
       <footer style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '28px 40px', borderTop: '1px solid var(--border)' }}>
         <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text)' }}>Dukkan</span>
-        <span style={{ fontFamily: 'Inter', fontSize: 12, color: 'var(--text-3)' }}>© 2024 Dukkan. All rights reserved.</span>
+        <span style={{ fontFamily: 'Inter', fontSize: 12, color: 'var(--text-3)' }}>© 2025 Dukkan. All rights reserved.</span>
         <div style={{ display: 'flex', gap: 24 }}>
           {['Privacy', 'Terms', 'Contact'].map(link => (
             <a key={link} href="#" style={{ fontFamily: 'Space Grotesk', fontSize: 11, color: 'var(--text-3)', textDecoration: 'none', letterSpacing: '0.05em' }}>{link}</a>

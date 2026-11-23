@@ -2,12 +2,17 @@ export interface Category {
   id: string
   name: string
   description?: string
+  productCount?: number
 }
 
 export interface Store {
   id: string
   name: string
+  slug?: string
   description?: string
+  logoUrl?: string
+  productCount?: number
+  rating?: number
 }
 
 export interface Product {
