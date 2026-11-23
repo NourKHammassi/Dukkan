@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Dukkan.Application.DTOs.Order;
+using Dukkan.Application.DTOs.Stripe;
 using Dukkan.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace Dukkan.API.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
+    private readonly IStripeService _stripeService;
 
-    public OrdersController(IOrderService orderService)
+    public OrdersController(IOrderService orderService, IStripeService stripeService)
     {
         _orderService = orderService;
+        _stripeService = stripeService;
     }
 
     [HttpGet("my")]
@@ -73,6 +76,31 @@ public class OrdersController : ControllerBase
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var order = await _orderService.CreateFromCartAsync(userId, dto);
             return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("checkout")]
+    public async Task<IActionResult> Checkout(CreateOrderDto dto)
+    {
+        try
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var order = await _orderService.CreateFromCartAsync(userId, dto);
+
+            var lineItems = order.Items.Select(i =>
+                new StripeLineItemDto(i.ProductName, i.PriceAtPurchase, i.Quantity));
+
+            var checkoutUrl = await _stripeService.CreateCheckoutSessionAsync(
+                order.Id,
+                order.OrderNumber,
+                order.TotalAmount,
+                lineItems);
+
+            return Ok(new { checkoutUrl, orderId = order.Id });
         }
         catch (Exception ex)
         {
