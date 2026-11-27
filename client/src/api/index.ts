@@ -88,3 +88,19 @@ export const unbanUser = (id: string) =>
 
 export const getPendingStores = () =>
   api.get('/api/admin/stores/pending').then(r => Array.isArray(r.data) ? r.data : r.data.items ?? [])
+
+export const updateProduct = (id: string, dto: {
+  name?: string; description?: string; price?: number
+  compareAtPrice?: number; stock?: number
+  categoryId?: string; images?: string[]; isActive?: boolean
+}) =>
+  api.put(`/api/products/${id}`, dto).then(r => r.data)
+
+export const deleteProduct = (id: string) =>
+  api.delete(`/api/products/${id}`)
+
+export const getStoreOrders = () =>
+  api.get<Order[]>('/api/orders/store').then(r => r.data)
+
+export const updateOrderStatus = (id: string, status: string, trackingNumber?: string) =>
+  api.patch(`/api/orders/${id}/status`, { status, trackingNumber }).then(r => r.data)
