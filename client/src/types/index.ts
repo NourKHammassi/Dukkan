@@ -21,6 +21,7 @@ export interface Product {
   description: string
   price: number
   compareAtPrice?: number
+  categoryId: string 
   images?: string[]
   imageUrl?: string
   categoryName: string
